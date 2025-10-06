@@ -28,11 +28,10 @@ internal extension EmojiRendering {
 
 internal extension PlatformImageView {
     func setFromURL(_ url: URL, rendering: EmojiRendering) {
-        Nuke.ImagePipeline.Configuration.isAnimatedImageDataEnabled = true
         Nuke.ImagePipeline.shared.loadImage(with: url) { result in
             switch result {
             case .success(let response):
-                if let animation = response.image.animatedImageData,
+                if let animation = response.container.data,
                    let gifImage = try? PlatformImage(gifData: animation, levelOfIntegrity: rendering.gifLevelOfIntegrity) {
                     DispatchQueue.main.async {
                         self.setGifImage(gifImage)
