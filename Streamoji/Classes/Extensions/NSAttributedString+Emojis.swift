@@ -106,7 +106,7 @@ extension NSMutableAttributedString {
                 let data = try! JSONEncoder().encode(emoji)
                 emojiAttachment.emojiData = data
                 #if !os(macOS)
-                emojiAttachment.contents = data
+                emojiAttachment.image = UIImage()
                 #endif
                 
                 self.replaceCharacters(

@@ -78,11 +78,11 @@ extension UITextView {
         attributedText.enumerateAttributes(in: NSRange(location: 0, length: attributedText.length), options: [], using: { attributes, crange, _ in
             DispatchQueue.main.async {
                 guard
-                    let emojiAttachment = attributes[NSAttributedString.Key.attachment] as? NSTextAttachment,
+                    let emojiAttachment = attributes[NSAttributedString.Key.attachment] as? EmojiTextAttachment,
                     let position1 = self.position(from: self.beginningOfDocument, offset: crange.location),
                     let position2 = self.position(from: position1, offset: crange.length),
                     let range = self.textRange(from: position1, to: position2),
-                    let emojiData = emojiAttachment.contents,
+                    let emojiData = emojiAttachment.emojiData,
                     let emoji = try? JSONDecoder().decode(EmojiSource.self, from: emojiData)
                 else {
                     return
@@ -137,11 +137,11 @@ extension UITextView {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + (delay ?? 0.0), execute: {
                 guard
-                    let emojiAttachment = attributes[NSAttributedString.Key.attachment] as? NSTextAttachment,
+                    let emojiAttachment = attributes[NSAttributedString.Key.attachment] as? EmojiTextAttachment,
                     let position1 = self.position(from: self.beginningOfDocument, offset: crange.location),
                     let position2 = self.position(from: position1, offset: crange.length),
                     let range = self.textRange(from: position1, to: position2),
-                    let emojiData = emojiAttachment.contents,
+                    let emojiData = emojiAttachment.emojiData,
                     let emoji = try? JSONDecoder().decode(EmojiSource.self, from: emojiData)
                 else {
                     return
