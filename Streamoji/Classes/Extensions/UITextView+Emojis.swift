@@ -87,14 +87,36 @@ extension UITextView {
                     return
                 }
                 
-                let layoutManager = self.layoutManager
-                let textContainer = self.textContainer
-                layoutManager.ensureLayout(for: textContainer)
-                let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
-                var rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-                rect.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
-                rect.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
-                rect.size = emojiAttachment.bounds.size
+                var rect: CGRect
+                if let position1 = self.position(from: self.beginningOfDocument, offset: crange.location),
+                   let position2 = self.position(from: position1, offset: crange.length),
+                   let textRange = self.textRange(from: position1, to: position2),
+                   self.window != nil {
+                    let candidate = self.firstRect(for: textRange)
+                    if !candidate.isNull && candidate.size != .zero {
+                        rect = candidate
+                    } else {
+                        let layoutManager = self.layoutManager
+                        let textContainer = self.textContainer
+                        layoutManager.ensureLayout(for: textContainer)
+                        let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
+                        var fallback = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                        fallback.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
+                        fallback.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
+                        fallback.size = emojiAttachment.bounds.size
+                        rect = fallback
+                    }
+                } else {
+                    let layoutManager = self.layoutManager
+                    let textContainer = self.textContainer
+                    layoutManager.ensureLayout(for: textContainer)
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
+                    var fallback = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                    fallback.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
+                    fallback.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
+                    fallback.size = emojiAttachment.bounds.size
+                    rect = fallback
+                }
 
                 let emojiView = EmojiView(frame: rect)
                 emojiView.backgroundColor = self.backgroundColor
@@ -152,14 +174,36 @@ extension UITextView {
                 
                 self.setNeedsLayout()
                 self.layoutIfNeeded()
-                let layoutManager = self.layoutManager
-                let textContainer = self.textContainer
-                layoutManager.ensureLayout(for: textContainer)
-                let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
-                var rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-                rect.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
-                rect.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
-                rect.size = emojiAttachment.bounds.size
+                var rect: CGRect
+                if let position1 = self.position(from: self.beginningOfDocument, offset: crange.location),
+                   let position2 = self.position(from: position1, offset: crange.length),
+                   let textRange = self.textRange(from: position1, to: position2),
+                   self.window != nil {
+                    let candidate = self.firstRect(for: textRange)
+                    if !candidate.isNull && candidate.size != .zero {
+                        rect = candidate
+                    } else {
+                        let layoutManager = self.layoutManager
+                        let textContainer = self.textContainer
+                        layoutManager.ensureLayout(for: textContainer)
+                        let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
+                        var fallback = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                        fallback.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
+                        fallback.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
+                        fallback.size = emojiAttachment.bounds.size
+                        rect = fallback
+                    }
+                } else {
+                    let layoutManager = self.layoutManager
+                    let textContainer = self.textContainer
+                    layoutManager.ensureLayout(for: textContainer)
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: crange, actualCharacterRange: nil)
+                    var fallback = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                    fallback.origin.x += self.textContainerInset.left - emojiAttachment.bounds.origin.x
+                    fallback.origin.y += self.textContainerInset.top - emojiAttachment.bounds.origin.y
+                    fallback.size = emojiAttachment.bounds.size
+                    rect = fallback
+                }
                 
                 let emojiView = EmojiView(frame: rect)
                 emojiView.backgroundColor = self.backgroundColor
